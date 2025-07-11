@@ -1,0 +1,7 @@
+{
+  "required": "Este campo é obrigatório",
+  "submit": "Enviar",
+  "reset": "Limpar",
+  "success": "Mensagem enviada com sucesso",
+  "error": "Erro ao enviar mensagem"
+}
