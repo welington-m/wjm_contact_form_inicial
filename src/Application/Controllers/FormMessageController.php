@@ -2,10 +2,16 @@
 namespace WJM\Application\Controllers;
 
 use WJM\Domain\Repositories\FormMessageRepositoryInterface;
+use WJM\Infra\WordPress\View;
 
 class FormMessageController
 {
-    public function __construct(private FormMessageRepositoryInterface $repo) {}
+    private View $view;
+    
+    public function __construct(private FormMessageRepositoryInterface $repo, View $view) 
+    {
+        $this->view = $view;
+    }
 
     public function list(array $filters, int $page, int $perPage): array {
         return $this->repo->findAll($filters, $page, $perPage);
@@ -21,5 +27,10 @@ class FormMessageController
 
     public function markViewed(int $id, string $username): void {
         $this->repo->markAsViewed($id, $username);
+    }
+
+    public function show(): void
+    {
+        $this->view->render('admin/messages');
     }
 }

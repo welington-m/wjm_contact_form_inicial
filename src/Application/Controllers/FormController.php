@@ -5,14 +5,22 @@ namespace WJM\Application\Controllers;
 use WJM\Domain\Repositories\FormRepositoryInterface;
 use WJM\Domain\Entities\Form;
 use WJM\Domain\Entities\FormField;
+use WJM\Infra\WordPress\View;
 
 class FormController
 {
+    private View $view;
     private FormRepositoryInterface $formRepository;
 
-    public function __construct(FormRepositoryInterface $formRepository)
+    public function __construct(FormRepositoryInterface $formRepository, View $view)
     {
         $this->formRepository = $formRepository;
+        $this->view = $view;
+    }
+
+    public function show(): void
+    {
+        $this->view->render('admin/form-editor');
     }
 
     public function save(array $request): bool
@@ -46,4 +54,5 @@ class FormController
     {
         return $this->formRepository->delete($formId);
     }
+
 }

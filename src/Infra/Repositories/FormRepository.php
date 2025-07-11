@@ -54,33 +54,30 @@ class FormRepository implements FormRepositoryInterface
 
     public function save(Form $form): int
     {
-        $this->db->insert('wjm_forms', [
+        $data = [
             'title' => $form->title,
             'fields' => json_encode($form->fields),
             'recipient_email' => $form->recipientEmail,
             'submit_button_text' => $form->submitButtonText,
             'error_message' => $form->errorMessage,
-            'success_message' => $form->successMessage
-        ]);
+            'success_message' => $form->successMessage,
+            'updated_at' => current_time('mysql'),
+        ];
 
-        return (int) $this->db->insert_id;
+        if ($form->id > 0) {
+            $this->db->update('wjm_forms', $data, ['id' => $form->id]);
+        } else {
+            $data['created_at'] = current_time('mysql');
+            $this->db->insert('wjm_forms', $data);
+            $form->id = $this->db->insert_id;
+        }
+
+        return $form->id;
     }
 
-    public function update(Form $form): void
+    public function delete(int $formId): bool
     {
-        $this->db->update('wjm_forms', [
-            'title' => $form->title,
-            'fields' => json_encode($form->fields),
-            'recipient_email' => $form->recipientEmail,
-            'submit_button_text' => $form->submitButtonText,
-            'error_message' => $form->errorMessage,
-            'success_message' => $form->successMessage
-        ], ['id' => $form->id]);
-    }
-
-    public function delete(int $formId): void
-    {
-        $this->db->delete('wjm_forms', ['id' => $formId]);
+        return (bool) $this->db->delete('wjm_forms', ['id' => $formId]);
     }
 
     public function storeSubmission(FormMessage $message): void

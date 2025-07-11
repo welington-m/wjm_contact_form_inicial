@@ -6,12 +6,19 @@
  * Author: Welington Jose Miyazato
  */
 
+
 defined('ABSPATH') || exit;
 
-// 1. Define a constante principal do plugin
+// 1. Autoload das classes (Composer ou PSR-4 manual)
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
+
+// 2. Define a constante principal do plugin
 if (!defined('WJM_PLUGIN_FILE')) {
     define('WJM_PLUGIN_FILE', __FILE__);
 }
 
-// 2. Autoload das classes (Composer ou PSR-4 manual)
-require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
+global $wpdb;
+(new \WJM\PluginKernel($wpdb))->register();
+

@@ -3,7 +3,7 @@
 namespace WJM;
 
 use WJM\Infra\WordPress\AssetsLoader;
-use WJM\Infra\WordPress\Admin\AdminMenu;
+use WJM\Infra\WordPress\AdminMenu;
 use WJM\Infra\Repositories\FormRepository;
 use WJM\Infra\Services\EmailSender;
 use WJM\Infra\WordPress\View;
@@ -17,6 +17,7 @@ use WJM\Application\Controllers\SubmissionController;
 use WJM\Application\Controllers\DashboardController;
 use WJM\Application\Controllers\ExportController;
 use WJM\Application\Controllers\FormController;
+use WJM\Infra\Hooks\HookRegistrar;
 use wpdb;
 
 class PluginKernel
@@ -45,12 +46,14 @@ class PluginKernel
         // Controllers
         $dashboardController = new DashboardController($formRepository, $view);
         $formEditorController = new FormController($createFormUseCase, $formRepository, $view);
-        $submissionController = new SubmissionController($submitFormUseCase);
+        $submissionController = new SubmissionController($submitFormUseCase, $formRepository, $view);
         $exportController = new ExportController($formRepository);
 
         // Menu e Assets
-        (new AdminMenu($dashboardController, $formEditorController))->register();
-        (new AssetsLoader())->register();
+        $adminMenu = new AdminMenu($dashboardController, $formEditorController);
+        $assetsLoader = new AssetsLoader();
+
+        (new HookRegistrar($adminMenu, $assetsLoader))->register();
 
         // Shortcode
         add_shortcode('contact-form', [$submissionController, 'renderShortcode']);

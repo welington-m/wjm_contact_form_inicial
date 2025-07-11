@@ -9,4 +9,5 @@ interface FormRepositoryInterface {
     public function findAll(): array;
     public function create(array $form): int;
     public function update(int $id, array $form): bool;
+    public function delete(int $id): bool;
 }
