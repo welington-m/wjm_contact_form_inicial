@@ -8,9 +8,9 @@ final class CreateFormDTO
     public function __construct(
             public string $title,
             public array   $fields,
-            public string $recipientEmail,
-            public string $submitButtonText,
-            public string $errorMessage,
-            public string $successMessage
+            public ?string $recipientEmail,
+            public ?string $submitButtonText,
+            public ?string $errorMessage,
+            public ?string $successMessage
     ){}
 }

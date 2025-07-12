@@ -10,6 +10,8 @@ class DashboardController
     private FormRepositoryInterface $formRepository;
     private View $view;
     private string $bannerUrl;
+    public const DEFAULT_BANNER_PATH = 'assets/img/banner-470x152.png';
+
 
     public function __construct(
         FormRepositoryInterface $formRepository,
@@ -18,7 +20,7 @@ class DashboardController
     ) {
         $this->formRepository = $formRepository;
         $this->view = $view;
-        $this->bannerUrl = $bannerUrl ?: plugins_url('assets/img/banner-470x152.png', WJM_PLUGIN_FILE);
+        $this->bannerUrl = $bannerUrl ?: plugins_url(DEFAULT_INCLUDE_PATH, WJM_PLUGIN_FILE);
     }
 
     public function show(): void

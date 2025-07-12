@@ -18,6 +18,6 @@ final class UpdateFormUseCase
     public function execute(int $id, UpdateFormDTO $dto): void
     {
         $form = FormFactory::fromUpdateDTO($dto, $id);
-        $this->formRepository->update($form, $id);
+        $this->formRepository->update($form);
     }
 }

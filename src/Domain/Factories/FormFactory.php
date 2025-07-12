@@ -18,26 +18,26 @@ class FormFactory
             id: null,
             title: $dto->title,
             fields: self::mapFields($dto->fields),
-            recipientEmail: $dto->recipient_email,
-            submitButtonText: $dto->submit_button_text,
-            errorMessage: $dto->error_message,
-            successMessage: $dto->success_message
+            recipientEmail: $dto->recipientEmail,
+            submitButtonText: $dto->submitButtonText,
+            errorMessage: $dto->errorMessage,
+            successMessage: $dto->successMessage
         );
     }
 
     /**
      * Cria uma entidade Form a partir de um DTO de atualização
      */
-    public static function fromUpdateDTO(UpdateFormDTO $dto, int $id): Form
+    public static function fromUpdateDTO(UpdateFormDTO $dto): Form
     {
         return new Form(
-            id: $id,
+            id: $dto->id,
             title: $dto->title,
             fields: self::mapFields($dto->fields),
-            recipientEmail: $dto->recipient_email,
-            submitButtonText: $dto->submit_button_text,
-            errorMessage: $dto->error_message,
-            successMessage: $dto->success_message
+            recipientEmail: $dto->recipientEmail,
+            submitButtonText: $dto->submitButtonText,
+            errorMessage: $dto->errorMessage,
+            successMessage: $dto->successMessage
         );
     }
 
