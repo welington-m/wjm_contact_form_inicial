@@ -18,11 +18,13 @@ class FormTableMigrator
         CREATE TABLE IF NOT EXISTS {$forms_table} (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
+            fields TEXT NOT NULL,
             recipient_email VARCHAR(255),
             submit_button_text VARCHAR(255) DEFAULT 'Enviar',
             error_message TEXT,
             success_message TEXT,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         ) {$charset_collate};
         ";
 
