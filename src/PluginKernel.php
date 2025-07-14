@@ -88,7 +88,7 @@ class PluginKernel
 
         $assetsLoader = new AssetsLoader();
 
-        (new HookRegistrar($adminMenu, $assetsLoader))->register();
+        (new HookRegistrar($adminMenu, $assetsLoader, $formEditorController))->register();
 
         // ========== SHORTCODES ==========
         add_shortcode('contact-form', [$submissionController, 'renderShortcode']);
