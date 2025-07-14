@@ -84,6 +84,27 @@ class FormController
         return true;
     }
 
+    public function handleSave(): void
+    {
+        // 1. Verifica nonce (opcional mas recomendado)
+        if (!current_user_can('manage_options')) {
+            wp_die(__('Você não tem permissão para isso.', 'wjm'));
+        }
+
+        // 2. Sanitiza os dados
+        $postData = $_POST;
+        $postData['fields'] = json_decode(stripslashes($postData['fields'] ?? '[]'), true);
+
+        // 3. Salva usando a aplicação
+        $this->save($postData);
+
+        // 4. Redireciona com sucesso ou erro
+        $redirectUrl = admin_url('admin.php?page=wjm_forms');
+        wp_redirect($redirectUrl);
+        exit;
+    }
+
+
     /**
      * Remove um formulário
      */
