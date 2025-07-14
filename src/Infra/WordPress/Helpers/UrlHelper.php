@@ -19,6 +19,7 @@ class UrlHelper
         return plugins_url($relativePath, $this->pluginFile);
     }
 
+    
     /**
      * Retorna a URL da tela de novo formulário.
      */
@@ -26,6 +27,7 @@ class UrlHelper
     {
         return admin_url('admin.php?page=wjm_form_editor');
     }
+
 
     /**
      * Retorna a URL da tela de mensagens.

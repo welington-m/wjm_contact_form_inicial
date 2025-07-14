@@ -2,34 +2,26 @@
 
 namespace WJM\Application\Controllers;
 
-use WJM\Domain\Repositories\FormRepositoryInterface;
+use WJM\Application\UseCase\Form\ListFormsUseCase;
 use WJM\Infra\WordPress\View;
+use WJM\Infra\WordPress\Helpers\UrlHelper;
 
 class DashboardController
 {
-    private FormRepositoryInterface $formRepository;
-    private View $view;
-    private string $bannerUrl;
-    public const DEFAULT_BANNER_PATH = 'assets/img/banner-470x152.png';
-
-
     public function __construct(
-        FormRepositoryInterface $formRepository,
-        View $view,
-        string $bannerUrl = ''
-    ) {
-        $this->formRepository = $formRepository;
-        $this->view = $view;
-        $this->bannerUrl = $bannerUrl ?: plugins_url(DEFAULT_INCLUDE_PATH, WJM_PLUGIN_FILE);
-    }
+        private ListFormsUseCase $listFormsUseCase,
+        private View $view,
+        private UrlHelper $urlHelper
+    ) {}
 
     public function show(): void
     {
         $this->view->render('admin/dashboard', [
-            'forms' => $this->formRepository->findAll(),
-            'new_form_url' => admin_url('admin.php?page=wjm_form_editor'),
-            'messages_url' => admin_url('admin.php?page=wjm_form_messages'),
-            'banner_url' => $this->bannerUrl
+            'forms' => $this->listFormsUseCase->execute(),
+            'new_form_url' => $this->urlHelper->getNewFormUrl(),
+            'messages_url' => $this->urlHelper->getMessagesUrl(),
+            'banner_url' => $this->urlHelper->getBannerUrl(),
+            'forms_count' => count($this->listFormsUseCase->execute())
         ]);
     }
 }

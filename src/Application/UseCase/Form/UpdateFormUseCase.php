@@ -2,22 +2,20 @@
 
 namespace WJM\Application\UseCase\Form;
 
-use WJM\Application\UseCase\Form\DTO\UpdateFormDTO;
-use WJM\Domain\Factories\FormFactory;
 use WJM\Domain\Repositories\FormRepositoryInterface;
+use WJM\Domain\Factories\FormFactory;
+use WJM\Application\UseCase\Form\DTO\UpdateFormDTO;
 
 final class UpdateFormUseCase
 {
-    private FormRepositoryInterface $formRepository;
+    public function __construct(
+        private FormRepositoryInterface $formRepository,
+        private FormFactory $formFactory
+    ) {}
 
-    public function __construct(FormRepositoryInterface $formRepository)
+    public function execute(UpdateFormDTO $dto): void
     {
-        $this->formRepository = $formRepository;
-    }
-
-    public function execute(int $id, UpdateFormDTO $dto): void
-    {
-        $form = FormFactory::fromUpdateDTO($dto, $id);
-        $this->formRepository->update($form);
+        $form = $this->formFactory->fromUpdateDTO($dto);
+        $this->formRepository->save($form);
     }
 }

@@ -1,3 +1,18 @@
+// Função para copiar shortcodes (comum a várias views)
+function setupShortcodeCopy() {
+    jQuery(document).on('click', '.wjm-copy-shortcode', function() {
+        const shortcode = jQuery(this).data('shortcode');
+        navigator.clipboard.writeText(shortcode);
+        
+        const originalText = jQuery(this).html();
+        jQuery(this).html('<span class="dashicons dashicons-yes"></span> Copiado!');
+        
+        setTimeout(() => {
+            jQuery(this).html(originalText);
+        }, 2000);
+    });
+}
+
 jQuery(document).ready(function ($) {
     console.log('✅ form-editor.js carregado com sucesso!');
 

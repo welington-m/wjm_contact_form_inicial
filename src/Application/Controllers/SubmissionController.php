@@ -2,49 +2,28 @@
 
 namespace WJM\Application\Controllers;
 
-use WJM\Domain\Repositories\FormRepositoryInterface;
-use WJM\Infra\Services\EmailSender;
+use WJM\Application\UseCase\Form\SubmitFormUseCase;
+use WJM\Application\UseCase\Form\DTO\SubmissionDTO;
 use WJM\Validators\FormValidator;
-use wpdb;
+use WJM\Infra\WordPress\View;
 
 class SubmissionController
 {
-    private FormRepositoryInterface $formRepository;
-    private EmailSender $emailSender;
-    private wpdb $db;
-
     public function __construct(
-        FormRepositoryInterface $formRepository,
-        EmailSender $emailSender,
-        wpdb $db
-    ) {
-        $this->formRepository = $formRepository;
-        $this->emailSender = $emailSender;
-        $this->db = $db;
-    }
+        private SubmitFormUseCase $submitUseCase,
+        private View $view
+    ) {}
 
     public function handle(int $formId, array $data): array
     {
-        $form = $this->formRepository->findById($formId);
-        if (!$form) {
-            return ['success' => false, 'error' => 'Formulário não encontrado.'];
-        }
+        $dto = new SubmissionDTO($formId, $data);
+        return $this->submitUseCase->execute($dto);
+    }
 
-        $errors = FormValidator::validate($form->fields, $data);
-        if (!empty($errors)) {
-            return ['success' => false, 'errors' => $errors];
-        }
-
-        // Armazena no banco
-        $this->db->insert($this->db->prefix . 'wjm_form_messages', [
-            'form_id' => $formId,
-            'data' => json_encode($data),
-            'created_at' => current_time('mysql')
-        ]);
-
-        // Envia email
-        $this->emailSender->send($form, $data);
-
-        return ['success' => true, 'message' => 'Mensagem enviada com sucesso.'];
+    public function renderShortcode($atts): string
+    {
+        // Implementação do shortcode
+        $formId = $atts['id'] ?? 0;
+        return $this->view->render('public/form', ['formId' => $formId]);
     }
 }
