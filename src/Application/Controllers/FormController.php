@@ -40,8 +40,9 @@ class FormController
     /**
      * Exibe o formulário de criação/edição
      */
-    public function edit(?int $id = null): void
+    public function edit($id = null): void
     {
+        $id = is_numeric($id) ? (int) $id : null;
         $form = $id ? $this->getFormUseCase->execute(new GetFormDTO($id)) : null;
         
         $this->view->render('admin/forms/edit', [
@@ -94,11 +95,13 @@ class FormController
     /**
      * Exibe os detalhes de um formulário
      */
-    public function show(int $id): void
+    public function show($id): void
     {
+        $id = is_numeric($id) ? (int)$id : 0;
+
         $form = $this->getFormUseCase->execute(new GetFormDTO($id));
         
-        $this->view->render('admin/forms/show', [
+        $this->view->render('admin/forms/index', [
             'form' => $form,
             'edit_url' => $this->urlHelper->getNewFormUrl() . '&id=' . $id
         ]);

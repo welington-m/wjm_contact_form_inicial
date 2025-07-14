@@ -72,7 +72,6 @@ class PluginKernel
 
         $submissionController = new SubmissionController(
             $submitFormUseCase,
-            $getFormUseCase,
             $view
         );
 

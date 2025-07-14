@@ -19,6 +19,11 @@ if (!defined('WJM_PLUGIN_FILE')) {
     define('WJM_PLUGIN_FILE', __FILE__);
 }
 
+register_activation_hook(__FILE__, function () {
+    global $wpdb;
+    \WJM\Infra\Database\FormTableMigrator::migrate($wpdb);
+});
+
 global $wpdb;
 (new \WJM\PluginKernel($wpdb))->register();
 

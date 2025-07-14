@@ -11,7 +11,7 @@ class AdminMenu
         private DashboardController $dashboardController,
         private FormController $formController
     ) {}
-    public static function register(): void
+    public function register(): void
     {
         add_action('admin_menu', function () {
             add_menu_page(
@@ -31,7 +31,7 @@ class AdminMenu
                 'Form Editor',
                 'manage_options',
                 'wjm_form_editor',
-                [$this->formController, 'show']
+                [$this->formController, 'edit']
             );
         });
     }
