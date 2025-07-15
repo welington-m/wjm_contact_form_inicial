@@ -20,9 +20,17 @@ class AdminMenu
                 'manage_options',
                 'wjm_contact_dashboard',
                 [$this->dashboardController, 'show'],
-                // [self::class, 'renderDashboard'],
                 'dashicons-email-alt',
                 25
+            );
+
+            add_submenu_page(
+                'wjm_contact_dashboard',
+                'Editar Formulários',
+                'Editar Formulários',
+                'manage_options', 
+                'wjm_forms', 
+                [$this->formController, 'index'] 
             );
 
             add_submenu_page(

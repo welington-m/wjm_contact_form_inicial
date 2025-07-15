@@ -2,9 +2,9 @@
 
 namespace WJM\Application\UseCase\Form;
 
+use WJM\Application\Mappers\FormDTOMapper;
 use WJM\Domain\Repositories\FormRepositoryInterface;
-use WJM\Domain\Entities\Form;
-use WJM\Application\UseCase\Form\DTO\GetFormDTO;
+use WJM\Application\UseCase\Form\DTO\UpdateFormDTO;
 
 final class GetFormUseCase
 {
@@ -12,8 +12,11 @@ final class GetFormUseCase
         private FormRepositoryInterface $formRepository
     ) {}
 
-    public function execute(GetFormDTO $dto): ?Form
+    public function execute(int $id): ?UpdateFormDTO
     {
-        return $this->formRepository->findById($dto->formId);
+        $form = $this->formRepository->findById($id);
+
+        return $form ? FormDTOMapper::toUpdateDTO($form) : null;
     }
+
 }

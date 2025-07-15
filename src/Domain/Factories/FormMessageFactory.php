@@ -11,8 +11,8 @@ final class FormMessageFactory
     public function fromDTO(SubmissionDTO $dto, Form $form): FormMessage
     {
         return new FormMessage(
-            formId: $dto->form_id,
-            data: $dto->fields,
+            formId: $dto->formId,
+            data: $dto->data,
             ipAddress: $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1'
         );
     }

@@ -1,12 +1,12 @@
 // Função para copiar shortcodes (comum a várias views)
 function setupShortcodeCopy() {
-    jQuery(document).on('click', '.wjm-copy-shortcode', function() {
+    jQuery(document).on('click', '.wjm-copy-shortcode', function () {
         const shortcode = jQuery(this).data('shortcode');
         navigator.clipboard.writeText(shortcode);
-        
+
         const originalText = jQuery(this).html();
         jQuery(this).html('<span class="dashicons dashicons-yes"></span> Copiado!');
-        
+
         setTimeout(() => {
             jQuery(this).html(originalText);
         }, 2000);
@@ -14,7 +14,7 @@ function setupShortcodeCopy() {
 }
 
 jQuery(document).ready(function ($) {
-    console.log('✅ form-editor.js carregado com sucesso!');
+    console.log('✅ admin.js carregado com sucesso!');
 
     const $toggleBtn = $('#wjm-toggle-editor');
     const $editor = $('#wjm-visual-editor');
@@ -34,7 +34,15 @@ jQuery(document).ready(function ($) {
     // Adicionar novo campo
     $addFieldBtn.on('click', function () {
         const index = $fieldsContainer.children().length;
-        const fieldHtml = `
+        const fieldHtml = renderField(index, { name: '', label: '', type: 'text', required: false });
+        $fieldsContainer.append(fieldHtml);
+        attachRemoveHandler();
+        updateFieldIndexes();
+    });
+
+    // Renderiza um campo com valores
+    function renderField(index, field) {
+        return `
             <div class="wjm-field-card" data-index="${index}">
                 <div class="wjm-field-header">
                     <h3>Campo #${index + 1}</h3>
@@ -44,32 +52,28 @@ jQuery(document).ready(function ($) {
                 </div>
                 <div class="wjm-field-body">
                     <p>
-                        <label>Nome: <input type="text" class="wjm-field-name" placeholder="Ex: email" required></label>
+                        <label>Nome: <input type="text" class="wjm-field-name" value="${field.name}" placeholder="Ex: email" required></label>
                     </p>
                     <p>
-                        <label>Rótulo: <input type="text" class="wjm-field-label" placeholder="Ex: Seu Email" required></label>
+                        <label>Rótulo: <input type="text" class="wjm-field-label" value="${field.label}" placeholder="Ex: Seu Email" required></label>
                     </p>
                     <p>
                         <label>Tipo:
                             <select class="wjm-field-type">
-                                <option value="text">Texto</option>
-                                <option value="email">Email</option>
-                                <option value="textarea">Textarea</option>
-                                <option value="select">Select</option>
+                                <option value="text" ${field.type === 'text' ? 'selected' : ''}>Texto</option>
+                                <option value="email" ${field.type === 'email' ? 'selected' : ''}>Email</option>
+                                <option value="textarea" ${field.type === 'textarea' ? 'selected' : ''}>Textarea</option>
+                                <option value="select" ${field.type === 'select' ? 'selected' : ''}>Select</option>
                             </select>
                         </label>
                     </p>
                     <p>
-                        <label><input type="checkbox" class="wjm-field-required"> Obrigatório</label>
+                        <label><input type="checkbox" class="wjm-field-required" ${field.required ? 'checked' : ''}> Obrigatório</label>
                     </p>
                 </div>
             </div>
         `;
-
-        $fieldsContainer.append(fieldHtml);
-        attachRemoveHandler();
-        updateFieldIndexes();
-    });
+    }
 
     // Anexar evento para remover campos
     function attachRemoveHandler() {
@@ -105,19 +109,39 @@ jQuery(document).ready(function ($) {
                 return false;
             }
 
-            fields.push({ name, label, type, required });
+            fields.push({ name, label, type, required, options: [] });
         });
 
         if (!valid) return;
 
-        const json = JSON.stringify({ fields }, null, 2);
+        const json = JSON.stringify(fields, null, 2);
         $jsonTextarea.val(json);
         alert('✅ JSON atualizado com sucesso!');
     });
 
-    // Mostrar editor caso já existam campos (modo edição)
-    if ($fieldsContainer.children().length > 0) {
-        $editor.show();
-        $toggleBtn.find('.btn-text').text('Ocultar Editor Visual');
+    // Auto renderizar os campos salvos do JSON ao carregar a página
+    function renderExistingFieldsFromJson() {
+        const rawJson = $jsonTextarea.val();
+        if (!rawJson) return;
+
+        try {
+            const fields = JSON.parse(rawJson);
+            if (!Array.isArray(fields)) return;
+
+            $fieldsContainer.empty();
+            fields.forEach((field, index) => {
+                const html = renderField(index, field);
+                $fieldsContainer.append(html);
+            });
+
+            attachRemoveHandler();
+            updateFieldIndexes();
+            $editor.show();
+            $toggleBtn.find('.btn-text').text('Ocultar Editor Visual');
+        } catch (e) {
+            console.error('Erro ao renderizar campos do JSON:', e);
+        }
     }
+
+    renderExistingFieldsFromJson();
 });

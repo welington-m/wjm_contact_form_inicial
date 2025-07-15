@@ -126,7 +126,7 @@
                 <div class="wjm-json-editor">
                     <label for="wjm_config_json">Configuração JSON:</label>
                     <textarea id="wjm_config_json" name="fields" class="large-text code" rows="10"><?php
-                        echo $form ? esc_textarea(json_encode(['fields' => $form->fields], JSON_PRETTY_PRINT)) : '';
+                        echo $form ? esc_textarea(json_encode($form->fields, JSON_PRETTY_PRINT)) : '';
                     ?></textarea>
                 </div>
             </div>

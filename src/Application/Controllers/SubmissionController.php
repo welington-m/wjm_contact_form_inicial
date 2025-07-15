@@ -4,6 +4,7 @@ namespace WJM\Application\Controllers;
 
 use WJM\Application\UseCase\Form\SubmitFormUseCase;
 use WJM\Application\UseCase\Form\DTO\SubmissionDTO;
+use WJM\Infra\Repositories\FormRepository;
 use WJM\Validators\FormValidator;
 use WJM\Infra\WordPress\View;
 
@@ -22,8 +23,60 @@ class SubmissionController
 
     public function renderShortcode($atts): string
     {
-        // Implementação do shortcode
-        $formId = $atts['id'] ?? 0;
-        return $this->view->render('public/form', ['formId' => $formId]);
+        $formId = isset($atts['id']) ? (int)$atts['id'] : 0;
+
+        if ($formId <= 0) {
+            return '<p>Formulário inválido.</p>';
+        }
+
+        $repository = new FormRepository($GLOBALS['wpdb']);
+        $form = $repository->findById($formId);
+
+        if (!$form) {
+            return '<p>Formulário não encontrado.</p>';
+        }
+
+        return $this->view->render('public/form', ['form' => $form]);
+    }
+
+    public function handlePost(): void
+    {
+        // Verifica nonce de segurança
+        if (!isset($_POST['wjm_nonce']) || !wp_verify_nonce($_POST['wjm_nonce'], 'wjm_form_submit')) {
+            wp_die('Falha na verificação de segurança');
+        }
+
+        // Extrai ID do formulário
+        $formId = isset($_POST['form_id']) ? (int) $_POST['form_id'] : 0;
+        if ($formId <= 0) {
+            wp_die('ID do formulário inválido.');
+        }
+
+        // Dados do formulário
+        $formData = $_POST;
+
+        try {
+            $result = $this->handle($formId, $formData);
+
+            if ($result['success']) {
+                wp_redirect(add_query_arg([
+                    'form_status' => 'success',
+                    'message' => urlencode($result['message'] ?? 'Formulário enviado com sucesso!')
+                ], wp_get_referer()));
+                exit;
+            } else {
+                wp_redirect(add_query_arg([
+                    'form_status' => 'error',
+                    'message' => urlencode($result['message'] ?? 'Erro ao enviar o formulário.')
+                ], wp_get_referer()));
+                exit;
+            }
+        } catch (\Throwable $e) {
+            wp_redirect(add_query_arg([
+                'form_status' => 'error',
+                'message' => urlencode('Erro inesperado: ' . $e->getMessage())
+            ], wp_get_referer()));
+            exit;
+        }
     }
 }
