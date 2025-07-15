@@ -36,7 +36,10 @@ class SubmissionController
             return '<p>Formulário não encontrado.</p>';
         }
 
-        return $this->view->render('public/form', ['form' => $form]);
+
+        $html = $this->view->render('public/form', ['form' => $form]);
+
+        return is_string($html) ? $html : '';
     }
 
     public function handlePost(): void
