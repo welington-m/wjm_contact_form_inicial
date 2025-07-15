@@ -34,21 +34,17 @@ class FormController
         ]);
     }
 
-    public function edit($id = null): void
+    public function edit(): void
     {
-        if ($id === null && isset($_GET['id'])) {
-            $id = (int) $_GET['id'];
-        }
+        $id = $_GET['id'] ?? null;
 
-        $form = null;
         if ($id) {
-            $form = $this->getFormUseCase->execute(new GetFormDTO($id));
+            $form = $this->getFormUseCase->execute((int) $id);
+        } else {
+            $form = null;
         }
 
-        $this->view->render('admin/forms/edit', [
-            'form' => $form,
-            'back_url' => $this->urlHelper->getNewFormUrl()
-        ]);
+        $this->view->render('admin/forms/edit', ['form' => $form]);
     }
 
     public function save(array $request): bool
@@ -100,9 +96,19 @@ class FormController
         exit;
     }
 
-    public function delete(int $formId): bool
+    public function delete(): bool
     {
-        return $this->deleteFormUseCase->execute(new DeleteFormDTO($formId));
+        $formId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+
+        if ($formId <= 0 || !wp_verify_nonce($_GET['_wpnonce'] ?? '', 'wjm_delete_form_' . $formId)) {
+            wp_die('Ação não autorizada.', 'Erro', ['response' => 403]);
+        }
+        $formRepository = new \WJM\Infra\Repositories\FormRepository($GLOBALS['wpdb']);
+
+        $formRepository->delete($formId);
+
+        wp_redirect(admin_url('admin.php?page=wjm_forms&deleted=1'));
+        exit;
     }
 
     public function show($id): void
