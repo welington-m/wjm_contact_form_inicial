@@ -20,10 +20,8 @@ if (!defined('WJM_PLUGIN_FILE')) {
 }
 
 register_activation_hook(__FILE__, function () {
-    global $wpdb;
-    \WJM\Infra\Database\FormTableMigrator::migrate($wpdb);
+    \WJM\Infra\Database\FormTableMigrator::migrate($GLOBALS['wpdb']);
 });
 
-global $wpdb;
-(new \WJM\PluginKernel($wpdb))->register();
+(new \WJM\PluginKernel($GLOBALS['wpdb']))->register();
 
