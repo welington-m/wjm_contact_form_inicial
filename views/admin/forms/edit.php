@@ -71,6 +71,7 @@
                     <div id="wjm-fields-container" class="wjm-fields-container">
                         <?php if ($form && !empty($form->fields)): ?>
                             <?php foreach ($form->fields as $index => $field): ?>
+                                <?php if (!is_array($field)) continue; ?>
                                 <div class="wjm-field-card" data-index="<?php echo $index; ?>">
                                     <div class="wjm-field-header">
                                         <h3>Campo #<?php echo $index + 1; ?></h3>
@@ -82,28 +83,28 @@
                                         <div class="wjm-field-row">
                                             <label>Nome: 
                                                 <input type="text" class="wjm-field-name" placeholder="Ex: email" 
-                                                       value="<?php echo esc_attr($field->name ?? ''); ?>" required>
+                                                       value="<?php echo esc_attr($field['name'] ?? ''); ?>" required>
                                             </label>
                                         </div>
                                         <div class="wjm-field-row">
                                             <label>Rótulo: 
                                                 <input type="text" class="wjm-field-label" placeholder="Ex: Seu Email" 
-                                                       value="<?php echo esc_attr($field->label); ?>" required>
+                                                       value="<?php echo esc_attr($field['label']); ?>" required>
                                             </label>
                                         </div>
                                         <div class="wjm-field-row">
                                             <label>Tipo:
                                                 <select class="wjm-field-type">
-                                                    <option value="text" <?php selected($field->type, 'text'); ?>>Texto</option>
-                                                    <option value="email" <?php selected($field->type, 'email'); ?>>Email</option>
-                                                    <option value="textarea" <?php selected($field->type, 'textarea'); ?>>Textarea</option>
-                                                    <option value="select" <?php selected($field->type, 'select'); ?>>Select</option>
+                                                    <option value="text" <?php selected($field['type'], 'text'); ?>>Texto</option>
+                                                    <option value="email" <?php selected($field['type'], 'email'); ?>>Email</option>
+                                                    <option value="textarea" <?php selected($field['type'], 'textarea'); ?>>Textarea</option>
+                                                    <option value="select" <?php selected($field['type'], 'select'); ?>>Select</option>
                                                 </select>
                                             </label>
                                         </div>
                                         <div class="wjm-field-row">
                                             <label>
-                                                <input type="checkbox" class="wjm-field-required" <?php checked($field->required); ?>>
+                                                <input type="checkbox" class="wjm-field-required" <?php checked($field['required']); ?>>
                                                 Obrigatório
                                             </label>
                                         </div>

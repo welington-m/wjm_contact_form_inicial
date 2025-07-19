@@ -5,7 +5,6 @@ namespace WJM\Application\Controllers;
 use WJM\Application\UseCase\Form\SubmitFormUseCase;
 use WJM\Application\UseCase\Form\DTO\SubmissionDTO;
 use WJM\Infra\Repositories\FormRepository;
-use WJM\Validators\FormValidator;
 use WJM\Infra\WordPress\View;
 
 class SubmissionController
