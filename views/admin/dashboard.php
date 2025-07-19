@@ -29,10 +29,15 @@
                         <td><code>[wjm_form id="<?php echo esc_attr((string)$form->id); ?>"]</code></td>
                         <td>
                             <a href="<?php echo esc_url(admin_url('admin.php?page=wjm_form_editor&id=' . $form->id)); ?>" class="button button-small">Editar</a>
-                            <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=wjm_forms&action=delete&id=' . $form->id), 'wjm_delete_form_' . $form->id)); ?>"
-                            class="button button-small wjm-delete-form" style="color:red;"
-                            onclick="return confirm('Tem certeza que deseja excluir este formulário?');">
-                                Excluir
+                            <a href="<?php echo esc_url(
+                                    wp_nonce_url(
+                                        admin_url('admin-post.php?action=wjm_delete_form&id=' . $form->id),
+                                        'wjm_delete_form_' . $form->id
+                                    )
+                                ); ?>"
+                                class="button button-small wjm-remove-field" style="color:white;background-color:#dc3232;"
+                                onclick="return confirm('Tem certeza que deseja excluir este formulário?');">
+                                    <span class="dashicons dashicons-trash"></span> Excluir
                             </a>
                             <button class="button button-small" onclick="navigator.clipboard.writeText('[wjm_form id=<?php echo esc_js((string)$form->id); ?>]')">Copiar</button>
                         </td>
