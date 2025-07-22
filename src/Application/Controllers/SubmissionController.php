@@ -41,44 +41,42 @@ class SubmissionController
         return is_string($html) ? $html : '';
     }
 
-    public function handlePost(): void
-    {
-        // Verifica nonce de segurança
-        if (!isset($_POST['wjm_nonce']) || !wp_verify_nonce($_POST['wjm_nonce'], 'wjm_form_submit')) {
-            wp_die('Falha na verificação de segurança');
-        }
+public function handlePost(): void
+{
+    // Verifica nonce de segurança
+    if (!isset($_POST['wjm_nonce']) || !wp_verify_nonce($_POST['wjm_nonce'], 'wjm_form_submit')) {
+        wp_die('Falha na verificação de segurança');
+    }
 
-        // Extrai ID do formulário
-        $formId = isset($_POST['form_id']) ? (int) $_POST['form_id'] : 0;
-        if ($formId <= 0) {
-            wp_die('ID do formulário inválido.');
-        }
+    $formId = isset($_POST['form_id']) ? (int) $_POST['form_id'] : 0;
+    if ($formId <= 0) {
+        wp_die('ID do formulário inválido.');
+    }
 
-        // Dados do formulário
-        $formData = $_POST;
+    $formData = $_POST;
 
-        try {
-            $result = $this->handle($formId, $formData);
+    try {
+        $result = $this->handle($formId, $formData);
 
-            if ($result['success']) {
-                wp_redirect(add_query_arg([
-                    'form_status' => 'success',
-                    'message' => urlencode($result['message'] ?? 'Formulário enviado com sucesso!')
-                ], wp_get_referer()));
-                exit;
-            } else {
-                wp_redirect(add_query_arg([
-                    'form_status' => 'error',
-                    'message' => urlencode($result['message'] ?? 'Erro ao enviar o formulário.')
-                ], wp_get_referer()));
-                exit;
-            }
-        } catch (\Throwable $e) {
+        if ($result['success']) {
+            wp_redirect(add_query_arg([
+                'form_status' => 'success',
+                'message' => urlencode('Formulário enviado com sucesso!')
+            ], wp_get_referer()));
+        } else {
             wp_redirect(add_query_arg([
                 'form_status' => 'error',
-                'message' => urlencode('Erro inesperado: ' . $e->getMessage())
+                'message' => urlencode($result['error'] ?? 'Erro ao enviar o formulário.')
             ], wp_get_referer()));
-            exit;
         }
+        exit;
+    } catch (\Throwable $e) {
+        wp_redirect(add_query_arg([
+            'form_status' => 'error',
+            'message' => urlencode('Erro inesperado: ' . $e->getMessage())
+        ], wp_get_referer()));
+        exit;
     }
+}
+
 }

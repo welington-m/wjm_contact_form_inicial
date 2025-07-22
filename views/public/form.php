@@ -4,22 +4,15 @@ if (!$form) {
     echo '<p>Formulário não encontrado.</p>';
     return;
 }
+
+$form_status = $_GET['form_status'] ?? '';
+$message = $_GET['message'] ?? '';
 ?>
 
 <div class="wjm-contact-form">
-    <?php if (!empty($successMessage)): ?>
-        <div class="wjm-success">
-            <?php echo esc_html($successMessage); ?>
-        </div>
-    <?php endif; ?>
-
-    <?php if (!empty($errors)): ?>
-        <div class="wjm-errors">
-            <ul>
-                <?php foreach ($errors as $error): ?>
-                    <li><?php echo esc_html($error); ?></li>
-                <?php endforeach; ?>
-            </ul>
+    <?php if (!empty($form_status) && !empty($message)): ?>
+        <div class="<?php echo $form_status === 'success' ? 'wjm-success' : 'wjm-errors'; ?>">
+            <?php echo esc_html($message); ?>
         </div>
     <?php endif; ?>
 

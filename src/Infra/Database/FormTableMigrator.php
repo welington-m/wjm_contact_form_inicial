@@ -47,6 +47,9 @@ class FormTableMigrator
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             form_id BIGINT UNSIGNED NOT NULL,
             data LONGTEXT NOT NULL,
+            submitted_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            ip_address VARCHAR(45) NOT NULL,
+            viewed TINYINT(1) DEFAULT 0 NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             INDEX (form_id)
         ) {$charset_collate};
