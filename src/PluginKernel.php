@@ -22,6 +22,7 @@ use WJM\Application\Controllers\DashboardController;
 use WJM\Application\Controllers\FormController;
 use WJM\Application\Controllers\SubmissionController;
 use WJM\Application\Controllers\ExportController;
+use WJM\Application\Controllers\FormMessageController;
 use WJM\Infra\Hooks\HookRegistrar;
 
 class PluginKernel
@@ -79,16 +80,28 @@ class PluginKernel
             $formMessageRepository
         );
 
+        $formMessageController = new FormMessageController(
+            $formMessageRepository,
+            $view
+        );
+
         // ========== HOOK REGISTRATION ==========
         $adminMenu = new AdminMenu(
             $dashboardController,
             $formEditorController,
-            $submissionController
+            // $submissionController
+            $formMessageController
         );
 
         $assetsLoader = new AssetsLoader();
 
-        (new HookRegistrar($adminMenu, $assetsLoader, $formEditorController, $submissionController))->register();
+        (new HookRegistrar(
+            $adminMenu, 
+            $assetsLoader, 
+            $formEditorController, 
+            $submissionController, 
+            $formMessageController
+        ))->register();
 
         // ========== SHORTCODES ==========
         add_shortcode('contact-form', [$submissionController, 'renderShortcode']);

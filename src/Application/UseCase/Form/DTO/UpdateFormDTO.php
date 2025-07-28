@@ -22,7 +22,7 @@ final class UpdateFormDTO
         public readonly string $errorMessage,
         public readonly string $successMessage
     ) {
-        // Validação básica (você pode expandir com Value Objects ou Validadores externos depois)
+        
         if ($this->id <= 0) {
             throw new \InvalidArgumentException("ID do formulário inválido.");
         }

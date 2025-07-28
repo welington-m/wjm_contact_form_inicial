@@ -49,4 +49,30 @@ class AssetsLoader
             true
         );
     }
+
+    private function enqueueMessagesAssets(): void
+    {
+        // CSS específico para mensagens
+        wp_enqueue_style(
+            'wjm-admin-messages-css',
+            plugins_url('assets/css/admin-messages.css', WJM_PLUGIN_FILE),
+            [],
+            filemtime(plugin_dir_path(WJM_PLUGIN_FILE) . 'assets/css/admin-messages.css')
+        );
+
+        // JS específico para mensagens
+        wp_enqueue_script(
+            'wjm-admin-messages-js',
+            plugins_url('assets/js/admin-messages.js', WJM_PLUGIN_FILE),
+            ['jquery'],
+            filemtime(plugin_dir_path(WJM_PLUGIN_FILE) . 'assets/js/admin-messages.js'),
+            true
+        );
+
+        // Localize o script com dados necessários
+        wp_localize_script('wjm-admin-messages-js', 'wjm_ajax', [
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('wjm_message_nonce')
+        ]);
+    }
 }

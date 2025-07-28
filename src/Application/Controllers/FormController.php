@@ -49,7 +49,6 @@ class FormController
 
     public function save(array $request): bool
     {
-        // Garante compatibilidade com a estrutura que vem da view
         $fields = $request['fields']['fields'] ?? $request['fields'] ?? [];
 
         if (empty($request['id'])) {

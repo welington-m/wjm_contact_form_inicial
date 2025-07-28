@@ -43,7 +43,6 @@ class SubmissionController
 
 public function handlePost(): void
 {
-    // Verifica nonce de segurança
     if (!isset($_POST['wjm_nonce']) || !wp_verify_nonce($_POST['wjm_nonce'], 'wjm_form_submit')) {
         wp_die('Falha na verificação de segurança');
     }

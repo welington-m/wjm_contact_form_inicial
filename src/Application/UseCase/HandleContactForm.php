@@ -12,7 +12,7 @@ class HandleContactForm {
     public function execute(int $formId, array $submittedData): bool {
         $form = $this->formRepository->findById($formId);
         if (!$form) return false;
-        // Validação e manipulação do formulário
+        
         return true;
     }
 }

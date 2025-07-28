@@ -32,4 +32,24 @@ class FormMessage
 
         return $html;
     }
+    public function getId(): int
+    {
+        return $this->id ?? 0;
+    }
+
+    public function getFormTitle(): string
+    {
+        // Você precisará injetar o FormRepository ou os dados do formulário
+        return 'Formulário #' . $this->formId; // Temporário
+    }
+
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    public function getSubmittedAt(): string
+    {
+        return $this->submittedAt->format('d/m/Y H:i');
+    }
 }
