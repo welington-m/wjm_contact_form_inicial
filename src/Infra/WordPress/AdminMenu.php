@@ -36,7 +36,7 @@ class AdminMenu
             );
 
             add_submenu_page(
-                null,
+                'wjm_forms',
                 'Form Editor',
                 'Form Editor',
                 'manage_options',
@@ -54,11 +54,11 @@ class AdminMenu
             );
 
             add_submenu_page(
-                null, // Não aparece no menu
+                'wjm_forms', 
                 'Detalhes da Mensagem',
-                '', // Título vazio
+                '', 
                 'manage_options',
-                'wjm_view_message', // Slug diferente do anterior
+                'wjm_view_message', 
                 [$this->formMessageController, 'show']
             );
         });
