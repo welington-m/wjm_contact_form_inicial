@@ -89,7 +89,6 @@ class PluginKernel
         $adminMenu = new AdminMenu(
             $dashboardController,
             $formEditorController,
-            // $submissionController
             $formMessageController
         );
 
@@ -100,7 +99,8 @@ class PluginKernel
             $assetsLoader, 
             $formEditorController, 
             $submissionController, 
-            $formMessageController
+            $formMessageController,
+            $exportController
         ))->register();
 
         // ========== SHORTCODES ==========

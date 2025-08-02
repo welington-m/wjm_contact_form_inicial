@@ -108,10 +108,56 @@ class FormMessageRepository implements FormMessageRepositoryInterface
         );
     }
 
-    public function export(array $filters): string
+    public function getMessagesForExport(array $filters = []): array
     {
-        // Implementação de exportação para CSV/Excel
-        // [...] (código de exportação)
+        $query = "SELECT * FROM {$this->wpdb->prefix}wjm_form_messages";
+        $where = [];
+        $params = [];
+
+        // Filtro por ID do formulário
+        if (!empty($filters['form_id'])) {
+            $where[] = "form_id = %d";
+            $params[] = $filters['form_id'];
+        }
+
+        // Filtro por texto
+        if (!empty($filters['search'])) {
+            $where[] = "data LIKE %s";
+            $params[] = '%' . $this->wpdb->esc_like($filters['search']) . '%';
+        }
+
+        // Filtro por data
+        if (!empty($filters['date_from'])) {
+            $where[] = "submitted_at >= %s";
+            $params[] = $filters['date_from'] . ' 00:00:00';
+        }
+
+        if (!empty($filters['date_to'])) {
+            $where[] = "submitted_at <= %s";
+            $params[] = $filters['date_to'] . ' 23:59:59';
+        }
+
+        // Filtro por status de visualização
+        if (isset($filters['viewed']) && $filters['viewed'] !== null) {
+            $where[] = "viewed = %d";
+            $params[] = (int)$filters['viewed'];
+        }
+
+        // Monta a query
+        if (!empty($where)) {
+            $query .= " WHERE " . implode(" AND ", $where);
+        }
+
+        $query .= " ORDER BY submitted_at DESC";
+
+        // Executa a query
+        if (!empty($params)) {
+            $query = $this->wpdb->prepare($query, $params);
+        }
+
+        $results = $this->wpdb->get_results($query);
+
+        return array_map([$this, 'mapToEntity'], $results);
     }
 
     private function mapToEntity(object $row): FormMessage

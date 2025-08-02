@@ -18,5 +18,5 @@ interface FormMessageRepositoryInterface
     
     public function markAsViewed(int $id, string $username): bool;
     
-    public function export(array $filters): string;
+    public function getMessagesForExport(array $filters = []): array;
 }

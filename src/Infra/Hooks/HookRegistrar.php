@@ -2,6 +2,7 @@
 
 namespace WJM\Infra\Hooks;
 
+use WJM\Application\Controllers\ExportController;
 use WJM\Application\Controllers\FormController;
 use WJM\Application\Controllers\FormMessageController;
 use WJM\Application\Controllers\SubmissionController;
@@ -15,19 +16,22 @@ class HookRegistrar
     private FormController $formController;
     private SubmissionController $submissionController;
     private FormMessageController $formMessageController;
+    private ExportController $exportController;
 
     public function __construct(
         AdminMenu $adminMenu,
         AssetsLoader $assetsLoader,
         FormController $formController,
         SubmissionController $submissionController,
-        FormMessageController $formMessageController
+        FormMessageController $formMessageController,
+        ExportController $exportController
     ) {
         $this->adminMenu = $adminMenu;
         $this->assetsLoader = $assetsLoader;
         $this->formController = $formController;
         $this->submissionController = $submissionController;
         $this->formMessageController = $formMessageController;
+        $this->exportController = $exportController;
     }
 
     public function register(): void
@@ -49,6 +53,7 @@ class HookRegistrar
         
         // Mensagens
         add_action('wp_ajax_wjm_get_message_details', [$this->formMessageController, 'getMessageDetails']);
+        add_action('admin_post_wjm_export_messages_csv', [$this->exportController, 'exportMessagesToCSV']);
 
     }
 }

@@ -8,9 +8,6 @@
 
 <div class="wrap">
     <h1 class="wp-heading-inline">Mensagens Recebidas</h1>
-    <a href="<?= esc_url(add_query_arg(['page' => 'wjm_form_messages', 'export' => 'all'], admin_url('admin.php'))) ?>" class="page-title-action">
-        Exportar Tudo
-    </a>
     <hr class="wp-header-end">
 
     <!-- Filtro de busca -->
@@ -20,9 +17,6 @@
             <label class="screen-reader-text" for="message-search-input">Buscar Mensagens:</label>
             <input type="search" id="message-search-input" name="s" value="<?php echo esc_attr($searchTerm); ?>">
             <input type="submit" class="button" value="Buscar">
-            <?php if (!empty($searchTerm)): ?>
-                <a href="<?= esc_url(remove_query_arg('s')) ?>" class="button">Limpar</a>
-            <?php endif; ?>
         </p>
     </form>
 
@@ -40,7 +34,7 @@
         <tbody>
         <?php if (empty($messages)): ?>
             <tr>
-                <td colspan="5">Nenhuma mensagem encontrada.</td>
+                <td colspan="4">Nenhuma mensagem encontrada.</td>
             </tr>
         <?php else: ?>
             <?php foreach ($messages as $msg): ?>
@@ -58,24 +52,13 @@
                         <a href="<?= esc_url(
                             add_query_arg(
                                 [
-                                    'page' => 'wjm_view_message',
+                                    'page' => 'wjm_view_message', // Usando o novo slug
                                     'id' => $msg->getId()
                                 ],
                                 admin_url('admin.php')
                             )
                         ) ?>" class="button">
                             Ver
-                        </a>
-                        <a href="<?= esc_url(
-                            add_query_arg(
-                                [
-                                    'page' => 'wjm_form_messages',
-                                    'export' => $msg->getId()
-                                ],
-                                admin_url('admin.php')
-                            )
-                        ) ?>" class="button">
-                            Exportar
                         </a>
                     </td>
                 </tr>
@@ -90,7 +73,7 @@
             <div class="tablenav-pages">
                 <?php
                 $totalPages = ceil($total / $perPage);
-                $baseUrl = add_query_arg(['page' => 'wjm_form_messages', 's' => $searchTerm], admin_url('admin.php'));
+                $baseUrl = add_query_arg(['page' => 'wjm_form_messages', 's' => $searchTerm]);
                 for ($i = 1; $i <= $totalPages; $i++):
                     $active = $i === $currentPage ? 'class="current-page"' : '';
                     echo '<a ' . $active . ' href="' . esc_url(add_query_arg('paged', $i, $baseUrl)) . '">' . $i . '</a> ';
