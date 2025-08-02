@@ -10,8 +10,6 @@ interface FormMessageRepositoryInterface
     
     public function findById(int $id): ?FormMessage;
     
-    public function findByFormId(int $formId): array;
-    
     public function getMessages(string $search = '', int $page = 1, int $perPage = 10): array;
     
     public function countMessages(string $search = ''): int;

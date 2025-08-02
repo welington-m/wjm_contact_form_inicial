@@ -43,20 +43,6 @@ class FormMessageRepository implements FormMessageRepositoryInterface
         return $this->mapToEntity($row);
     }
 
-    public function findByFormId(int $formId): array
-    {
-        $results = $this->wpdb->get_results(
-            $this->wpdb->prepare(
-                "SELECT * FROM {$this->wpdb->prefix}wjm_form_messages 
-                 WHERE form_id = %d 
-                 ORDER BY submitted_at DESC",
-                $formId
-            )
-        );
-
-        return array_map([$this, 'mapToEntity'], $results);
-    }
-
     public function getMessages(string $search = '', int $page = 1, int $perPage = 10): array
     {
         $offset = ($page - 1) * $perPage;

@@ -5,6 +5,8 @@ namespace WJM\Infra\WordPress;
 use WJM\Application\Controllers\DashboardController;
 use WJM\Application\Controllers\FormController;
 use WJM\Application\Controllers\FormMessageController;
+use WJM\Application\Controllers\FormMessageExportController;
+use WJM\Infra\Repositories\FormMessageExportRepository;
 
 class AdminMenu
 {
@@ -60,6 +62,18 @@ class AdminMenu
                 'manage_options',
                 'wjm_view_message', 
                 [$this->formMessageController, 'show']
+            );
+            
+            add_submenu_page(
+                'wjm_contact_form',
+                'Exportar CSV',
+                'Exportar CSV',
+                'manage_options',
+                'wjm_export_csv',
+                function () use ($view) {
+                    $controller = new FormMessageExportController(new FormMessageExportRepository($GLOBALS['wpdb']));
+                    $controller->exportCsv();
+                }
             );
         });
     }
